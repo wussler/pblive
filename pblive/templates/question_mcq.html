@@ -22,7 +22,7 @@
 	{% if session.questions[question_num].maximum == 1 %}
 		<div>
 			{% for answer in session.questions[question_num].answers %}
-				<button class="ui button{% if answer in user.answers[question_num] %} primary{% endif %}" onclick="socket.emit('answer', {{ question_num }}, ['{{ answer }}']);">{{ answer }}</button>
+				<button class="ui button button-margin{% if answer in user.answers[question_num] %} primary{% endif %}" onclick="socket.emit('answer', {{ question_num }}, ['{{ answer }}']);">{{ answer }}</button>
 			{% endfor %}
 		</div>
 	{% else %}

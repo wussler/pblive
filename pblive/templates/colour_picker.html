@@ -21,7 +21,7 @@
 <div id="colour_picker_container">
 	<div style="line-height: 38px;">
 		{% for colour in session.colours %}
-			<button class="ui button" style="background-color: {{ colour[1] }}; width: 32px; height: 32px; padding: 0 0;" onclick="socket.emit('register', {{ colour[0] }}, '{{ colour[1] }}');">{{ colour[0] }}</button>
+			<button class="ui button button-margin" style="background-color: {{ colour[1] }}; width: 32px; height: 32px; padding: 0 0;" onclick="socket.emit('register', {{ colour[0] }}, '{{ colour[1] }}');">{{ colour[0] }}</button>
 		{% endfor %}
 	</div>
 </div>

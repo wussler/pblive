@@ -33,7 +33,8 @@ class Session:
                 (1, '#f44336'), (2, '#e91e63'), (3, '#9c27b0'), (4, '#673ab7'), (5, '#3f51b5'), (6, '#2196f3'),
                 (7, '#03a9f4'), (8, '#00bcd4'), (9, '#009688'), (10, '#4caf50'), (11, '#8bc34a'), (12, '#cddc39'),
                 (13, '#ffeb3b'), (14, '#ffc107'), (15, '#ff9800'), (16, '#ff5722'), (17, '#795548'), (18, '#9e9e9e'),
-                (19, '#607d8b')
+                (19, '#607d8b'), (20, '#ffbebe'), (21, '#ffb3bf'), (22, '#c2c2ff'), (23, '#c2ffc2'), (24, '#e1c9f8'),
+                (25, '#ffc2ff')
             ]
 
         self.name = name
@@ -45,6 +46,16 @@ class Session:
     @classmethod
     def from_dict(cls, obj, name):
         return cls(name=name, title=obj['title'], questions=[Question.from_dict(x) for x in obj['questions']])
+
+    def get_scoreboard(self):
+        scoreboard = [
+            {
+                'user': user,
+                'score': user.get_total_score()
+            } for _, user in users.items() if user.session == self
+        ]
+
+        return sorted(scoreboard, key=lambda k: k['score'], reverse=True)
 
 
 class Question:
@@ -66,6 +77,7 @@ class Question:
             'type': TypeQuestion,
             'speed': SpeedQuestion,
             'speed_review': SpeedReviewQuestion,
+            'scoreboard': ScoreboardQuestion,
         }
         question = question_types[obj['type']]()
         question.load_dict(obj)
@@ -85,6 +97,12 @@ class LandingQuestion(Question):
     template_admin = 'session_landing_admin.html'
 
 
+class ScoreboardQuestion(Question):
+    # Not actually a question
+    template = 'scoreboard.html'
+    template_admin = 'scoreboard_admin.html'
+
+
 class MCQQuestion(Question):
     template = 'question_mcq.html'
     template_admin = 'question_mcq_admin.html'
@@ -93,11 +111,15 @@ class MCQQuestion(Question):
         super().__init__(*args, **kwargs)
 
         self.maximum = kwargs.get('maximum', 1)
+        self.points = kwargs.get('points', 0)
+        self.solution = kwargs.get('solution', None)
 
     def load_dict(self, obj):
         super().load_dict(obj)
 
         self.maximum = obj.get('maximum', self.maximum)
+        self.points = obj.get('points', self.points)
+        self.solution = obj.get('solution', self.solution)
 
 
 class DrawQuestion(Question):
@@ -178,6 +200,10 @@ class User:
         self.session = session
         self.answers = answers
         self.colour = colour
+        self.score = {}
+
+    def get_total_score(self):
+        return sum(self.score.values())
 
 
 class Admin(User):
@@ -226,3 +252,5 @@ def iterate_admins():
     admins_lock.acquire()
     yield from list(admins.items())
     admins_lock.release()
+
+

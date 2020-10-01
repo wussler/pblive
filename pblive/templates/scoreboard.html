@@ -1,4 +1,4 @@
-/*
+{#
     PBLive
     Copyright © 2017  RunasSudo (Yingtong Li)
 
@@ -14,27 +14,18 @@
 
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+#}
 
-#pblive-container {
-	padding-top: 5em;
-	padding-bottom: 5em;
-}
+{% extends 'question.html' %}
 
-.ui.button-margin {
-    margin:1em;
-}
-
-@media only screen and (max-width: 767px) {
-	#pblive-container {
-		padding-top: 1em;
-		padding-bottom: 1em;
-	}
-	#pblive-main {
-		padding-top: 3em;
-	}
-}
-
-#qrcode img {
-	margin: 0 auto;
-}
+{% block base %}
+	<h1 class="ui dividing header">Quiz finished</h1>
+	
+	<ol>
+		{% for row in session.get_scoreboard() %}
+			<li style="line-height: 40px;">
+				<button class="ui button" style="background-color: {{ row.user.colour[1] }}; width: 32px; height: 32px; padding: 0 0;">{{ row.user.colour[0] }}</button>: {{ row.score }}
+			</li>
+		{% endfor %}
+	</ol>
+{% endblock %}

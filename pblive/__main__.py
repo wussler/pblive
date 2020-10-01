@@ -186,6 +186,11 @@ def socket_answer(question_num, answer):
         user.answers[question_num] = answer
 
         if isinstance(user.session.questions[user.session.question_num], data.MCQQuestion):
+            question = user.session.questions[user.session.question_num]
+            if question.solution is not None:
+                points = question.points if question.solution == answer[0] else 0
+                user.score[user.session.question_num] = points
+
             flask_socketio.emit('update', render_question(user, user.session, user.session.question_num), room=user.sid)
 
         # Hurry!
@@ -278,4 +283,4 @@ def socket_pass_question():
 
 # Start server
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0')
+    socketio.run(app, host='127.0.0.1', port=8082)

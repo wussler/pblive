@@ -11,7 +11,7 @@ This repository was forked from https://yingtongli.me/git/PBLive/
     pip install -r requirements.txt
     python -m pblive
 
-Navigate to http://1.2.3.4:5000/admin to begin.
+Navigate to http://localhost:8082/admin to begin.
 
 ## Example
 
