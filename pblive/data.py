@@ -17,8 +17,6 @@
 import threading
 import time
 
-server_ip = None
-
 sessions = {}
 users = {}
 admins = {}

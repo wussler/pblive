@@ -21,7 +21,6 @@ import flask_socketio
 import os
 import os.path
 import random
-import socket
 import yaml
 
 from pblive import data
@@ -32,13 +31,7 @@ eventlet.monkey_patch()
 app = flask.Flask(__name__)
 app.jinja_env.globals['data'] = data
 
-socketio = flask_socketio.SocketIO(app)
-
-# Get server IP address
-tmp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-tmp_socket.connect(('118.138.0.0', 0))  # Connecting to a UDP socket sends no packets
-data.server_ip = tmp_socket.getsockname()[0]
-tmp_socket.close()
+socketio = flask_socketio.SocketIO(app, cors_allowed_origins="*")
 
 # Load session data
 for f in os.listdir('data'):
